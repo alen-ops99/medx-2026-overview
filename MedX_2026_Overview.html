@@ -28,9 +28,9 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -40,9 +40,114 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            cursor: pointer;
         }
 
-        /* ==================== HERO ==================== */
+        /* ==================== SLIDE SYSTEM ==================== */
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100px);
+        }
+
+        /* ==================== SLIDE NUMBERS ==================== */
+        .slide-number {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            z-index: 100;
+            letter-spacing: 0.05em;
+        }
+
+        .slide-number span {
+            color: var(--gold);
+        }
+
+        /* ==================== NAVIGATION DOTS ==================== */
+        .nav-dots {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover {
+            background: var(--gray-400);
+        }
+
+        .nav-dot.active {
+            background: var(--gold);
+            transform: scale(1.2);
+        }
+
+        /* ==================== CLICK HINT ==================== */
+        .click-hint {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-400);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        .click-hint svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ==================== HERO (SLIDE 1) ==================== */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -73,6 +178,8 @@
             text-transform: uppercase;
             color: var(--gold);
             margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
         }
 
         .hero-title {
@@ -84,6 +191,8 @@
             color: var(--gray-900);
             margin-bottom: 32px;
             max-width: 900px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
         }
 
         .hero-subtitle {
@@ -93,11 +202,15 @@
             max-width: 600px;
             margin-bottom: 64px;
             line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
         }
 
         .hero-stats {
             display: flex;
             gap: 80px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
         }
 
         .stat {
@@ -122,60 +235,32 @@
             margin-top: 12px;
         }
 
-        .scroll-hint {
-            position: absolute;
-            bottom: 48px;
-            left: 50%;
-            transform: translateX(-50%);
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== ABOUT (SLIDE 2) ==================== */
+        .about-slide {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-            color: var(--gray-400);
-            font-size: 0.6875rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            animation: fadeInUp 1s ease 0.5s both;
+            padding: 80px 48px;
+            background: var(--white);
         }
 
-        .scroll-hint::after {
-            content: '';
-            width: 1px;
-            height: 48px;
-            background: linear-gradient(to bottom, var(--gray-300), transparent);
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        /* ==================== IMAGE SECTION ==================== */
-        .image-section {
-            padding: 0 48px 120px;
-        }
-
-        .image-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.15), 0 30px 60px -30px rgba(0,0,0,0.2);
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 600px;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* ==================== ABOUT ==================== */
-        .about {
-            padding: 160px 24px;
+        .about-content {
             max-width: 900px;
-            margin: 0 auto;
             text-align: center;
+            margin-bottom: 60px;
         }
 
         .about-eyebrow {
@@ -200,17 +285,84 @@
             font-size: 1.25rem;
             color: var(--gray-500);
             line-height: 1.8;
+            margin-bottom: 48px;
         }
 
-        /* ==================== PROGRAMS ==================== */
+        .about-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .about-stat {
+            text-align: center;
+        }
+
+        .about-stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .about-stat-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-top: 8px;
+        }
+
+        /* Institution Logos */
+        .institution-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .institution-logo {
+            height: 40px;
+            opacity: 0.6;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .institution-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .institution-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+
+        /* ==================== WHAT WE DO (SLIDE 3) ==================== */
         .programs {
-            padding: 120px 48px 160px;
+            min-height: 100vh;
+            padding: 80px 48px;
             background: var(--gray-50);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .programs-header {
             max-width: 600px;
-            margin: 0 auto 80px;
+            margin: 0 auto 60px;
             text-align: center;
         }
 
@@ -232,16 +384,16 @@
 
         .programs-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .program-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 48px 40px;
+            padding: 40px 32px;
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             cursor: default;
             position: relative;
@@ -289,29 +441,22 @@
             background: var(--gold);
             padding: 6px 12px;
             border-radius: 100px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .program-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
         }
 
         .program-card.featured .program-name {
             color: var(--white);
         }
 
-        .program-meta {
-            font-size: 0.875rem;
-            color: var(--gold);
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
         .program-desc {
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
             color: var(--gray-500);
             line-height: 1.7;
         }
@@ -320,40 +465,129 @@
             color: var(--gray-400);
         }
 
-        /* Full width card */
-        .program-card.full {
-            grid-column: span 3;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 48px;
-            align-items: center;
+        .program-highlight {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.8125rem;
+            color: var(--gold);
+            font-weight: 600;
         }
 
-        .program-card.full .program-content {
-            max-width: 500px;
+        .program-card.featured .program-highlight {
+            border-color: rgba(255,255,255,0.1);
         }
 
-        .program-institutions {
+        /* ==================== 2026 PROJECTS (SLIDE 4) ==================== */
+        .calendar {
+            min-height: 100vh;
+            padding: 80px 48px;
+            background: var(--white);
             display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .institution-tag {
-            font-size: 0.75rem;
+        .calendar-header {
+            max-width: 600px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .calendar-eyebrow {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        .calendar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 500;
-            color: var(--gray-600);
-            background: var(--gray-100);
-            padding: 8px 16px;
-            border-radius: 100px;
+            color: var(--gray-900);
         }
 
-        /* ==================== CONTACT ==================== */
+        /* Timeline */
+        .timeline {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .timeline-item {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 24px;
+            width: 220px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px -8px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item.bridges {
+            border-left: 3px solid var(--gold);
+        }
+
+        .timeline-month {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .timeline-event {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .timeline-location {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+        }
+
+        .timeline-desc {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        .timeline-badge {
+            display: inline-block;
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--gold);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        /* ==================== CONTACT (SLIDE 5) ==================== */
         .contact {
-            padding: 160px 48px;
+            min-height: 100vh;
+            padding: 80px 48px;
             background: var(--gray-900);
             color: var(--white);
+            display: flex;
+            align-items: center;
         }
 
         .contact-grid {
@@ -390,55 +624,55 @@
             font-size: 1.125rem;
             color: var(--gray-400);
             line-height: 1.7;
-            margin-bottom: 64px;
+            margin-bottom: 48px;
         }
 
         .contact-card {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px;
-            padding: 48px;
+            padding: 40px;
         }
 
         .contact-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 500;
             margin-bottom: 8px;
         }
 
         .contact-role {
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
             color: var(--gray-400);
             line-height: 1.6;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .contact-info {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 1rem;
+            gap: 12px;
+            font-size: 0.9375rem;
             color: var(--white);
         }
 
         .contact-icon {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             background: rgba(184,134,11,0.15);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--gold);
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
         }
 
         .contact-image {
@@ -449,222 +683,419 @@
 
         .contact-image img {
             width: 100%;
-            height: 500px;
+            height: 450px;
             object-fit: cover;
             display: block;
         }
 
-        /* ==================== FOOTER ==================== */
-        .footer {
-            padding: 48px;
-            background: var(--black);
-            text-align: center;
-        }
-
-        .footer-logo {
-            height: 32px;
-            filter: brightness(0) invert(1);
-            opacity: 0.4;
-            margin-bottom: 16px;
-        }
-
-        .footer-text {
-            font-size: 0.8125rem;
-            color: var(--gray-600);
-            letter-spacing: 0.05em;
-        }
-
         /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .programs-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
+        }
 
-            .program-card.full {
-                grid-column: span 2;
-                grid-template-columns: 1fr;
-            }
-
+        @media (max-width: 1024px) {
             .contact-grid {
                 grid-template-columns: 1fr;
-                gap: 64px;
+                gap: 48px;
             }
 
             .contact-image {
                 order: -1;
+            }
+
+            .timeline {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .timeline-item {
+                width: 100%;
+                max-width: 400px;
             }
         }
 
         @media (max-width: 768px) {
             .hero-stats {
                 flex-direction: column;
-                gap: 48px;
+                gap: 32px;
             }
 
             .programs-grid {
                 grid-template-columns: 1fr;
             }
 
-            .program-card.full {
-                grid-column: span 1;
+            .programs, .calendar, .contact {
+                padding: 60px 24px;
             }
 
-            .programs, .contact {
-                padding: 80px 24px;
+            .about-stats {
+                flex-direction: column;
+                gap: 32px;
             }
 
-            .image-section {
-                padding: 0 24px 80px;
+            .nav-dots {
+                right: 20px;
             }
 
-            .image-container img {
-                height: 400px;
+            .slide-number {
+                right: 20px;
+                bottom: 20px;
             }
+
+            .institution-logos {
+                gap: 24px;
+            }
+        }
+
+        /* Dark slide adjustments */
+        .slide[data-theme="dark"] .nav-dot {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .slide[data-theme="dark"] .nav-dot.active {
+            background: var(--gold);
+        }
+
+        .slide[data-theme="dark"] .slide-number {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .slide[data-theme="dark"] .click-hint {
+            color: rgba(255,255,255,0.4);
         }
     </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-    <p class="hero-eyebrow">Med&X Association</p>
-    <h1 class="hero-title">Building Bridges in Biomedicine</h1>
-    <p class="hero-subtitle">A Croatian non-profit connecting talented biomedical professionals with world-renowned scientists and institutions since 2017.</p>
+<div class="slide-container">
 
-    <div class="hero-stats">
-        <div class="stat">
-            <div class="stat-value">2,500+</div>
-            <div class="stat-label">Participants</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">30+</div>
-            <div class="stat-label">Countries</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">11</div>
-            <div class="stat-label">Nobel Laureates</div>
-        </div>
-    </div>
+    <!-- SLIDE 1: HERO -->
+    <section class="slide active" data-slide="1">
+        <div class="hero">
+            <p class="hero-eyebrow">Med&X Association</p>
+            <h1 class="hero-title">Building Bridges in Biomedicine</h1>
+            <p class="hero-subtitle">A Croatian non-profit connecting talented biomedical professionals with world-renowned scientists and institutions since 2021.</p>
 
-    <div class="scroll-hint">Scroll</div>
-</section>
-
-<!-- IMAGE -->
-<section class="image-section">
-    <div class="image-container">
-        <img src="../biomedical-forum-2026/gala-evening.jpg" alt="Med&X Gala Evening">
-    </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about">
-    <p class="about-eyebrow">Our Mission</p>
-    <h2 class="about-title">Creating meaningful opportunities for knowledge exchange, research collaboration, and professional development.</h2>
-    <p class="about-text">Through flagship events and career programs, we bridge Croatian biomedical talent with the world's leading institutions and researchers.</p>
-</section>
-
-<!-- PROGRAMS -->
-<section class="programs">
-    <div class="programs-header">
-        <p class="programs-eyebrow">2026 Initiatives</p>
-        <h2 class="programs-title">Our Programs</h2>
-    </div>
-
-    <div class="programs-grid">
-        <div class="program-card featured">
-            <div class="program-badge">Senior Leaders</div>
-            <h3 class="program-name">Biomedical Forum</h3>
-            <p class="program-meta">May 2026 | Zadar</p>
-            <p class="program-desc">Invite-only gathering where senior leaders from medicine, science, industry, and policy convene for strategic dialogue.</p>
-        </div>
-
-        <div class="program-card featured">
-            <div class="program-badge">Young Professionals</div>
-            <h3 class="program-name">Plexus Conference</h3>
-            <p class="program-meta">December 2026 | Zagreb</p>
-            <p class="program-desc">Flagship annual conference bringing together Nobel laureates, pioneering researchers, and emerging scientists.</p>
-        </div>
-
-        <div class="program-card">
-            <div class="program-badge">Building Bridges</div>
-            <h3 class="program-name">Zurich</h3>
-            <p class="program-meta">March 2026</p>
-            <p class="program-desc">Connecting Swiss and Croatian biomedical professionals at the Croatian Consulate.</p>
-        </div>
-
-        <div class="program-card">
-            <div class="program-badge">Building Bridges</div>
-            <h3 class="program-name">Washington DC</h3>
-            <p class="program-meta">April 2026</p>
-            <p class="program-desc">Engaging the Croatian diaspora and American academic leaders at the Croatian Embassy.</p>
-        </div>
-
-        <div class="program-card">
-            <div class="program-badge">Building Bridges</div>
-            <h3 class="program-name">Boston</h3>
-            <p class="program-meta">October 2026</p>
-            <p class="program-desc">Tapping into the world's most concentrated biomedical ecosystem.</p>
-        </div>
-
-        <div class="program-card full">
-            <div class="program-content">
-                <div class="program-badge">Year-Round</div>
-                <h3 class="program-name">Med&X Accelerator</h3>
-                <p class="program-meta">Ongoing Program</p>
-                <p class="program-desc">Placing talented Croatian medical students at world-class institutions for transformative research experiences.</p>
-            </div>
-            <div class="program-institutions">
-                <span class="institution-tag">Harvard Medical School</span>
-                <span class="institution-tag">Yale University</span>
-                <span class="institution-tag">MIT</span>
-                <span class="institution-tag">Mayo Clinic</span>
-                <span class="institution-tag">Cleveland Clinic</span>
-                <span class="institution-tag">MGH</span>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact">
-    <div class="contact-grid">
-        <div class="contact-content">
-            <p class="contact-eyebrow">Get in Touch</p>
-            <h2 class="contact-title">Let's build bridges together.</h2>
-            <p class="contact-text">We welcome opportunities to collaborate and create meaningful connections that advance biomedicine.</p>
-
-            <div class="contact-card">
-                <h3 class="contact-name">Alen Juginovic, M.D.</h3>
-                <p class="contact-role">Postdoctoral Researcher, Harvard Medical School<br>President, Med&X</p>
-
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">@</div>
-                        <span>president@medx.hr</span>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">T</div>
-                        <span>+1 (617) 982-8835</span>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">W</div>
-                        <span>www.medx.hr</span>
-                    </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">2,500+</div>
+                    <div class="stat-label">Participants</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">30+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">Nobel Laureates</div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="contact-image">
-            <img src="../biomedical-forum-2026/networking.jpg" alt="Networking">
+    <!-- SLIDE 2: ABOUT -->
+    <section class="slide" data-slide="2">
+        <div class="about-slide">
+            <div class="about-content">
+                <p class="about-eyebrow">Our Mission</p>
+                <h2 class="about-title">Creating meaningful opportunities for knowledge exchange, research collaboration, and professional development.</h2>
+                <p class="about-text">Through flagship events and career programs, we bridge Croatian biomedical talent with the world's leading institutions and researchers, creating lasting impact on healthcare.</p>
+            </div>
+
+            <div class="about-stats">
+                <div class="about-stat">
+                    <div class="about-stat-value">5</div>
+                    <div class="about-stat-label">Years of Impact</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-value">20+</div>
+                    <div class="about-stat-label">Research Placements</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-value">6</div>
+                    <div class="about-stat-label">Partner Institutions</div>
+                </div>
+            </div>
+
+            <div class="institution-logos">
+                <span class="institution-name">Harvard Medical School</span>
+                <span class="institution-name">Yale University</span>
+                <span class="institution-name">MIT</span>
+                <span class="institution-name">Mayo Clinic</span>
+                <span class="institution-name">Cleveland Clinic</span>
+                <span class="institution-name">MGH</span>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-    <img src="../zurich_presentation/images/medx_logo.png" alt="Med&X" class="footer-logo">
-    <p class="footer-text">Building Bridges in Biomedicine</p>
-</footer>
+    <!-- SLIDE 3: WHAT WE DO -->
+    <section class="slide" data-slide="3">
+        <div class="programs">
+            <div class="programs-header">
+                <p class="programs-eyebrow">Our Pillars</p>
+                <h2 class="programs-title">What We Do</h2>
+            </div>
+
+            <div class="programs-grid">
+                <div class="program-card featured">
+                    <div class="program-badge">Flagship Event</div>
+                    <h3 class="program-name">Plexus Conference</h3>
+                    <p class="program-desc">Our flagship annual conference bringing together Nobel laureates, pioneering researchers, and emerging scientists from Croatia and around the world.</p>
+                    <p class="program-highlight">11 Nobel Laureates | 2,500+ Participants</p>
+                </div>
+
+                <div class="program-card featured">
+                    <div class="program-badge">Senior Leaders</div>
+                    <h3 class="program-name">Plexus Gala Evening</h3>
+                    <p class="program-desc">Advancing Croatian biomedicine through international collaboration. An evening gathering of 150+ senior leaders from medicine, science, industry, and policy.</p>
+                    <p class="program-highlight">Strategic Dialogue & Networking</p>
+                </div>
+
+                <div class="program-card">
+                    <div class="program-badge">Global Outreach</div>
+                    <h3 class="program-name">Building Bridges in Biomedicine</h3>
+                    <p class="program-desc">International events in Washington D.C., Zurich, and Boston connecting Croatian biomedical diaspora with local academic leaders and institutions.</p>
+                    <p class="program-highlight">3 Cities | 3 Continents</p>
+                </div>
+
+                <div class="program-card">
+                    <div class="program-badge">Career Development</div>
+                    <h3 class="program-name">Med&X Accelerator</h3>
+                    <p class="program-desc">1-6 month research or clinical internships at world-class institutions. Transfer of knowledge and skills back to Croatia, building bridges between institutions abroad and Croatian institutions through talented young people.</p>
+                    <p class="program-highlight">Long-term Impact</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: 2026 PROJECTS -->
+    <section class="slide" data-slide="4">
+        <div class="calendar">
+            <div class="calendar-header">
+                <p class="calendar-eyebrow">2026 Calendar</p>
+                <h2 class="calendar-title">Our 2026 Projects</h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item bridges">
+                    <div class="timeline-badge">Building Bridges</div>
+                    <div class="timeline-month">March</div>
+                    <div class="timeline-event">Zurich</div>
+                    <div class="timeline-location">Croatian Consulate</div>
+                    <div class="timeline-desc">Connecting Swiss and Croatian biomedical professionals.</div>
+                </div>
+
+                <div class="timeline-item bridges">
+                    <div class="timeline-badge">Building Bridges</div>
+                    <div class="timeline-month">April</div>
+                    <div class="timeline-event">Washington D.C.</div>
+                    <div class="timeline-location">Croatian Embassy</div>
+                    <div class="timeline-desc">Engaging the Croatian diaspora and American academic leaders.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-month">May</div>
+                    <div class="timeline-event">Biomedical Forum</div>
+                    <div class="timeline-location">Zadar, Croatia</div>
+                    <div class="timeline-desc">A gathering of Croatian biomedical professionals from all around the world. Senior leaders convene for strategic dialogue.</div>
+                </div>
+
+                <div class="timeline-item bridges">
+                    <div class="timeline-badge">Building Bridges</div>
+                    <div class="timeline-month">October</div>
+                    <div class="timeline-event">Boston</div>
+                    <div class="timeline-location">Harvard Medical School</div>
+                    <div class="timeline-desc">Tapping into the world's most concentrated biomedical ecosystem.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-month">Ongoing</div>
+                    <div class="timeline-event">Med&X Accelerator</div>
+                    <div class="timeline-location">Global</div>
+                    <div class="timeline-desc">1-6 month research or clinical internships at world-class institutions.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-month">December</div>
+                    <div class="timeline-event">Plexus Conference</div>
+                    <div class="timeline-location">Zagreb, Croatia</div>
+                    <div class="timeline-desc">The culmination of all our projects. Biomedical Croatians from around the world gather for our flagship event.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: CONTACT -->
+    <section class="slide" data-slide="5" data-theme="dark">
+        <div class="contact">
+            <div class="contact-grid">
+                <div class="contact-content">
+                    <p class="contact-eyebrow">Get in Touch</p>
+                    <h2 class="contact-title">Let's shape the future together.</h2>
+                    <p class="contact-text">Your support can help inspire the next generation through these projects. We welcome opportunities to collaborate and create meaningful connections that advance biomedicine.</p>
+
+                    <div class="contact-card">
+                        <h3 class="contact-name">Alen Juginovic, M.D.</h3>
+                        <p class="contact-role">Postdoctoral Researcher, Harvard Medical School<br>President, Med&X</p>
+
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">@</div>
+                                <span>president@medx.hr</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">T</div>
+                                <span>+1 (617) 982-8835</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">W</div>
+                                <span>www.medx.hr</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-image">
+                    <img src="../biomedical-forum-2026/networking.jpg" alt="Networking">
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- Navigation Dots -->
+<div class="nav-dots">
+    <div class="nav-dot active" data-goto="1"></div>
+    <div class="nav-dot" data-goto="2"></div>
+    <div class="nav-dot" data-goto="3"></div>
+    <div class="nav-dot" data-goto="4"></div>
+    <div class="nav-dot" data-goto="5"></div>
+</div>
+
+<!-- Slide Number -->
+<div class="slide-number"><span>1</span> / 5</div>
+
+<!-- Click Hint -->
+<div class="click-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+    </svg>
+    Click to continue
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+    const slideNumber = document.querySelector('.slide-number span');
+    const clickHint = document.querySelector('.click-hint');
+    let currentSlide = 1;
+    const totalSlides = slides.length;
+
+    function goToSlide(n) {
+        // Mark current slide as prev for animation
+        slides.forEach(slide => {
+            slide.classList.remove('active', 'prev');
+            if (parseInt(slide.dataset.slide) < n) {
+                slide.classList.add('prev');
+            }
+        });
+
+        // Activate new slide
+        const newSlide = document.querySelector(`[data-slide="${n}"]`);
+        newSlide.classList.add('active');
+
+        // Update dots
+        dots.forEach(dot => dot.classList.remove('active'));
+        dots[n - 1].classList.add('active');
+
+        // Update slide number
+        slideNumber.textContent = n;
+
+        // Update current slide tracker
+        currentSlide = n;
+
+        // Hide click hint on last slide
+        if (n === totalSlides) {
+            clickHint.style.opacity = '0';
+        } else {
+            clickHint.style.opacity = '1';
+        }
+
+        // Update nav dots color based on slide theme
+        const theme = newSlide.dataset.theme;
+        const navDots = document.querySelector('.nav-dots');
+        const slideNum = document.querySelector('.slide-number');
+        const hint = document.querySelector('.click-hint');
+
+        if (theme === 'dark') {
+            navDots.style.setProperty('--dot-bg', 'rgba(255,255,255,0.2)');
+            slideNum.style.color = 'rgba(255,255,255,0.4)';
+            hint.style.color = 'rgba(255,255,255,0.4)';
+        } else {
+            navDots.style.setProperty('--dot-bg', '');
+            slideNum.style.color = '';
+            hint.style.color = '';
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides) {
+            goToSlide(currentSlide + 1);
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 1) {
+            goToSlide(currentSlide - 1);
+        }
+    }
+
+    // Click anywhere to advance
+    document.body.addEventListener('click', (e) => {
+        // Don't advance if clicking on a navigation dot
+        if (e.target.classList.contains('nav-dot')) return;
+        nextSlide();
+    });
+
+    // Navigation dots
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToSlide(parseInt(dot.dataset.goto));
+        });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSlide();
+        }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 50) {
+            nextSlide();
+        } else if (touchEndX - touchStartX > 50) {
+            prevSlide();
+        }
+    });
+</script>
 
 </body>
 </html>
